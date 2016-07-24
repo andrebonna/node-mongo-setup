@@ -1,0 +1,10 @@
+- name: NodeJS and MongoDB Installation
+  hosts: tag_Name_{{aws_ec2_name}}
+  gather_facts: yes
+  become: yes
+  pre_tasks:
+    - name: Gather EC2 facts
+      action: ec2_facts
+  roles:
+    - nodejs
+    - mongodb

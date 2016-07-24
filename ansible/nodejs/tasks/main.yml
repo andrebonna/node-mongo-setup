@@ -1,0 +1,19 @@
+---
+- name: download nodejs repository
+  get_url:
+    url: https://deb.nodesource.com/setup_6.x
+    dest: nodejs.sh
+    mode: "a+x"
+
+- name: run nodejs repository update
+  command: bash nodejs.sh
+  become: yes
+  become_method: sudo
+
+- name: Install NodeJS
+  apt:
+    name: nodejs
+    state: present
+  become: yes
+  become_method: sudo
+
