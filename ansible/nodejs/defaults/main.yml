@@ -1,2 +1,4 @@
 ---
-# defaults file for nodejs
+dest_project_path: /home/ubuntu
+main_js: index
+main_file: "{{main_js}}.js"

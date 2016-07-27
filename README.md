@@ -24,7 +24,11 @@ Playbook Variables
 ------------------
 
     aws_ec2_name: The Tag Name of AWS EC2 Machine
-
+    project_folder: Name of the project folder
+    src_project_path: Path of the source project folder # /home/user/project_folder
+    dest_project_path: Path of the destination project folder # Ex: /home/ubuntu
+    main_js: Ex: index #Optional
+    main_file: Ex: "index.js" #Optional
 
 Example of Usage with Variables
 -------------------------------

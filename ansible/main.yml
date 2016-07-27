@@ -6,5 +6,5 @@
     - name: Gather EC2 facts
       action: ec2_facts
   roles:
-    - nodejs
     - mongodb
+    - nodejs

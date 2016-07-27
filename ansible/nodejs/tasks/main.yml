@@ -1,14 +1,20 @@
 ---
+- name: Check if nodejs already installed
+  command: "forever list"
+  register: nodejs_result
+
 - name: download nodejs repository
   get_url:
     url: https://deb.nodesource.com/setup_6.x
-    dest: nodejs.sh
+    dest: /tmp/nodejs.sh
     mode: "a+x"
+  when: "nodejs_result.stdout.find('command not found') != -1"
 
 - name: run nodejs repository update
-  command: bash nodejs.sh
+  command: bash /tmp/nodejs.sh
   become: yes
   become_method: sudo
+  when: "nodejs_result.stdout.find('command not found') != -1"
 
 - name: Install NodeJS
   apt:
@@ -16,4 +22,50 @@
     state: present
   become: yes
   become_method: sudo
+  when: "nodejs_result.stdout.find('command not found') != -1"
+
+
+- name: Install Forever
+  npm: name=forever state=present global=yes
+  become: yes
+  become_method: sudo
+
+- name: Copy Repository files
+  synchronize:
+    src: "{{src_project_path}}"
+    dest: "{{dest_project_path}}"
+    rsync_opts:
+      - "--no-motd"
+      - "--exclude=.git"
+  become: yes
+  become_method: sudo
+
+- name: NPM Install
+  npm: "path={{dest_project_path}}/{{project_folder}}"
+
+- name: Ensure Cron for reboot
+  cron: name="forever run" user=ubuntu special_time=reboot job="forever start {{dest_project_path}}/{{project_folder}}/{{main_file}}"
+  become_user: ubuntu
+
+- name: Test if forever is running
+  command: "forever list"
+  register: result
+  become_user: ubuntu
+
+- name: Run forever if not running
+  command: "forever start {{dest_project_path}}/{{project_folder}}/{{main_file}}"
+  when: "result.stdout.find('No forever processes running') != -1"
+  become_user: ubuntu
+
+- name: Restart forever if already running
+  command: "forever restartall"
+  when: "result.stdout.find('No forever processes running') == -1"
+  become_user: ubuntu
+
+
+
+
+
+
+
 
