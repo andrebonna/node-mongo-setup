@@ -52,18 +52,14 @@
   register: result
   become_user: ubuntu
 
-- name: Run forever if not running
-  command: "forever start {{dest_project_path}}/{{project_folder}}/{{main_file}}"
+- name: Stop forever
+  command: "forever stopall"
   when: "result.stdout.find('No forever processes running') != -1"
   become_user: ubuntu
 
-- name: Restart forever if already running
-  command: "forever restartall"
-  when: "result.stdout.find('No forever processes running') == -1"
+- name: Run forever if not running
+  command: "forever start {{dest_project_path}}/{{project_folder}}/{{main_file}}"
   become_user: ubuntu
-
-
-
 
 
 
