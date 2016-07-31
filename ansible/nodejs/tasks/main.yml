@@ -44,22 +44,27 @@
   npm: "path={{dest_project_path}}/{{project_folder}}"
 
 - name: Ensure Cron for reboot
-  cron: name="forever run" user=ubuntu special_time=reboot job="forever start {{dest_project_path}}/{{project_folder}}/{{main_file}}"
-  become_user: ubuntu
+  cron: name="forever run" user={{user_name}} special_time=reboot job="forever start {{dest_project_path}}/{{project_folder}}/{{main_file}}"
+  become_user: "{{user_name}}"
 
 - name: Test if forever is running
   command: "forever list"
   register: result
-  become_user: ubuntu
+  become_user: "{{user_name}}"
 
 - name: Stop forever
   command: "forever stopall"
-  when: "result.stdout.find('No forever processes running') != -1"
-  become_user: ubuntu
+  when: "result.stdout.find('No forever processes running') == -1"
+  become_user: "{{user_name}}"
 
 - name: Run forever if not running
-  command: "forever start {{dest_project_path}}/{{project_folder}}/{{main_file}}"
-  become_user: ubuntu
+  command: "forever start {{main_file}}"
+  args:
+    chdir: "{{dest_project_path}}/{{project_folder}}"
+  environment:
+    CERT_PATH: "/etc/letsencrypt/live/{{domain}}"
+    SSL: "3003"
+  become_user: "{{user_name}}"
 
 
 

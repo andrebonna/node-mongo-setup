@@ -6,5 +6,6 @@
     - name: Gather EC2 facts
       action: ec2_facts
   roles:
+    - andrebonna.certbot
     - mongodb
     - nodejs

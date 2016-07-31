@@ -3,7 +3,7 @@
   apt_key: keyserver=keyserver.ubuntu.com id=EA312927
 
 - name: Create a list file for MongoDB
-  template: src=mongodb-org.list.j2 dest=/etc/apt/sources.list.d/mongodb-org.list owner=ubuntu group=ubuntu mode=0644
+  template: src=mongodb-org.list.j2 dest=/etc/apt/sources.list.d/mongodb-org.list owner={{user_name}} group={{user_name}} mode=0644
 
 - name: Install MongoDB
   apt: name=mongodb-org update_cache=yes
