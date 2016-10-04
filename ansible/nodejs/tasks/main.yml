@@ -47,6 +47,10 @@
   cron: name="forever run" user={{user_name}} special_time=reboot job="forever start {{dest_project_path}}/{{project_folder}}/{{main_file}}"
   become_user: "{{user_name}}"
 
+- name: CronJob to Restart forever after running cert update
+  cron: name="renew cert forever restart" day=1 month="*/2" minute=5 hour=0
+        user="{{user_name}}" job="forever restartall"
+
 - name: Test if forever is running
   command: "forever list"
   register: result
