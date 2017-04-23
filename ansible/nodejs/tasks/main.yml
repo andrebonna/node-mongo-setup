@@ -44,7 +44,7 @@
   npm: "path={{dest_project_path}}/{{project_folder}}"
 
 - name: Ensure Cron for reboot
-  cron: name="forever run" user={{user_name}} special_time=reboot job="forever start {{dest_project_path}}/{{project_folder}}/{{main_file}}"
+  cron: name="forever run" user={{user_name}} special_time=reboot job="SSL=3003 CERT_PATH=/etc/letsencrypt/live/{{domain}} forever start {{dest_project_path}}/{{project_folder}}/{{main_file}}"
   become_user: "{{user_name}}"
 
 - name: CronJob to Restart forever after running cert update
@@ -69,8 +69,3 @@
     CERT_PATH: "/etc/letsencrypt/live/{{domain}}"
     SSL: "3003"
   become_user: "{{user_name}}"
-
-
-
-
-
